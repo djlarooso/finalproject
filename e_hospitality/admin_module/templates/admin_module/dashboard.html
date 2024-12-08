@@ -1,0 +1,30 @@
+{% extends 'admin_module/base.html' %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<h2>Admin Dashboard</h2>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <h3>Facilities</h3>
+        <ul class="list-group">
+            {% for facility in facilities %}
+            <li class="list-group-item">{{ facility.name }}</li>
+            {% empty %}
+            <li class="list-group-item">No facilities available.</li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="col-md-6">
+        <h3>Departments</h3>
+        <ul class="list-group">
+            {% for department in departments %}
+            <li class="list-group-item">{{ department.name }} - {{ department.facility.name }}</li>
+            {% empty %}
+            <li class="list-group-item">No departments available.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}

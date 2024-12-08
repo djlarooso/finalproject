@@ -1,0 +1,150 @@
+{% extends 'patient/base.html' %}
+
+{% block title %}Patient Dashboard{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="display-5 fw-bold">Welcome, {{ patient.user.first_name }}!</h1>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Appointments Section -->
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
+                    <h3 class="card-title mb-0">Recent Appointments</h3>
+                </div>
+                <div class="card-body">
+                    {% if appointments %}
+                        <div class="list-group list-group-flush">
+                            {% for appointment in appointments %}
+                            <div class="list-group-item border-0 py-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1 text-primary">Dr. {{ appointment.doctor.user.last_name }}</h6>
+                                        <p class="mb-1 text-muted small">
+                                            {{ appointment.date_time|date:"F j, Y" }} at {{ appointment.date_time|time:"g:i A" }}
+                                        </p>
+                                        {% if appointment.reason %}
+                                        <p class="mb-0 small text-muted">{{ appointment.reason }}</p>
+                                        {% endif %}
+                                    </div>
+                                    <span class="badge bg-{{ appointment.status|yesno:'success,warning,danger' }} rounded-pill">
+                                        {{ appointment.status|title }}
+                                    </span>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted mb-0">No upcoming appointments.</p>
+                    {% endif %}
+                </div>
+                <div class="card-footer bg-white border-top-0 pb-4">
+                    <a href="{% url 'book_appointment' %}" class="btn btn-primary">Book New Appointment</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Medical Records Section -->
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
+                    <h3 class="card-title mb-0">Recent Medical Records</h3>
+                </div>
+                <div class="card-body">
+                    {% if medical_records %}
+                        <div class="list-group list-group-flush">
+                            {% for record in medical_records %}
+                            <div class="list-group-item border-0 py-3">
+                                <h6 class="mb-1">{{ record.date|date:"F j, Y" }}</h6>
+                                <p class="mb-1"><strong>Diagnosis:</strong> {{ record.diagnosis }}</p>
+                                <p class="mb-0 text-muted small">{{ record.treatment }}</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted mb-0">No medical records available.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Bills Section -->
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
+                    <h3 class="card-title mb-0">Recent Bills</h3>
+                </div>
+                <div class="card-body">
+                    {% if bills %}
+                        <div class="list-group list-group-flush">
+                            {% for bill in bills %}
+                            <div class="list-group-item border-0 py-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1">{{ bill.date|date:"F j, Y" }}</h6>
+                                        <p class="mb-0 text-muted small">{{ bill.description }}</p>
+                                    </div>
+                                    <div class="text-end">
+                                        <h6 class="mb-1">${{ bill.amount }}</h6>
+                                        <span class="badge bg-{{ bill.status|yesno:'success,warning' }} rounded-pill">
+                                            {{ bill.status|title }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted mb-0">No bills available.</p>
+                    {% endif %}
+                </div>
+                <div class="card-footer bg-white border-top-0 pb-4">
+                    <a href="{% url 'patient_bills' %}" class="btn btn-primary">View All Bills</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        background-color: #e8f5e9;
+    }
+    
+    .card {
+        border-radius: 15px;
+        border: none;
+    }
+    
+    .card-header {
+        border-radius: 15px 15px 0 0 !important;
+    }
+    
+    .btn-primary {
+        background-color: #2e7d32;
+        border-color: #2e7d32;
+    }
+    
+    .btn-primary:hover {
+        background-color: #1b5e20;
+        border-color: #1b5e20;
+    }
+    
+    .text-primary {
+        color: #2e7d32 !important;
+    }
+    
+    .list-group-item:hover {
+        background-color: #f8faf8;
+    }
+    
+    .badge {
+        font-weight: 500;
+    }
+</style>
+{% endblock %}

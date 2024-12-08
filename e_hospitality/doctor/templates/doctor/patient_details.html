@@ -1,0 +1,49 @@
+{% extends 'doctor/base.html' %}
+
+{% block title %}Patient Details{% endblock %}
+
+{% block content %}
+<h2>Patient Details: {{ patient.user.get_full_name }}</h2>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <h3>Medical Records</h3>
+        <ul class="list-group">
+            {% for record in medical_records %}
+            <li class="list-group-item">
+                <strong>{{ record.date }}</strong><br>
+                Diagnosis: {{ record.diagnosis }}<br>
+                Treatment: {{ record.treatment }}
+            </li>
+            {% empty %}
+            <li class="list-group-item">No medical records available.</li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="col-md-6">
+        <h3>Prescriptions</h3>
+        <ul class="list-group">
+            {% for prescription in prescriptions %}
+            <li class="list-group-item">
+                <strong>{{ prescription.date }}</strong><br>
+                Medications: {{ prescription.medications }}<br>
+                Instructions: {{ prescription.instructions }}
+            </li>
+            {% empty %}
+            <li class="list-group-item">No prescriptions available.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <h3>Add Prescription</h3>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Add Prescription</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
